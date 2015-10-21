@@ -36,4 +36,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define MEMENTOS_OLDMAINNAME "_old_main"
 #define MEMENTOS_MNOTP "_mnotp"
 
+#define DEBUG_TYPE "mementos"
+
 #endif
