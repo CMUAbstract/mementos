@@ -48,7 +48,7 @@ namespace llvm {
 
   struct MementosSizeGlobals : public ModulePass {
     static char ID;
-    DataLayout *TD;
+    const DataLayout *TD;
     unsigned TotalSizeInBytes;
 
     MementosSizeGlobals ();

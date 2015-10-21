@@ -64,7 +64,7 @@ bool shouldSkipGlobal (const StringRef sr) {
 }
 
 bool MementosSizeGlobals::runOnModule (Module &M) {
-  TD = getAnalysisIfAvailable<DataLayout>();
+  TD = &M.getDataLayout();
   for (Module::const_global_iterator i = M.global_begin();
       i != M.global_end(); ++i) {
     Type *T = i->getType()->getElementType();
