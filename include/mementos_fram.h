@@ -9,6 +9,8 @@ unsigned int __mementos_locate_next_bundle (void);
 unsigned int __mementos_find_active_bundle (void);
 void __mementos_fram_clear(unsigned long);
 unsigned int __mementos_bundle_in_range (unsigned int);
+void __mementos_atboot_cleanup (void);
+void __mementos_inactive_cleanup (unsigned int active_bundle_addr);
 
 #define REGISTER_BYTES (sizeof(unsigned)) // bytes in a register
 #define BUNDLE_SIZE_REGISTERS 30// (15 * REGISTER_BYTES)
