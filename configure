@@ -587,9 +587,10 @@ PACKAGE_URL=''
 ac_unique_file=""Makefile.common.in""
 ac_subst_vars='LTLIBOBJS
 LIBOBJS
-MSPGCC_HEADERS
+GCC_HEADERS
+GCC_PATH
 MSPSIM
-MSPGCC
+GCC
 LLVM_LINK
 LLVM_LLC
 LLVM_OPT
@@ -640,7 +641,7 @@ ac_subst_files=''
 ac_user_opts='
 enable_option_checking
 with_llvm
-with_mspgcc
+with_gcc
 with_mspsim
 '
       ac_precious_vars='build_alias
@@ -649,7 +650,7 @@ target_alias
 LLVMPREFIX
 LLVM_BIN
 LLVM_LIB
-MSPGCC
+GCC
 MSPSIM'
 
 
@@ -1260,14 +1261,14 @@ Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
   --without-PACKAGE       do not use PACKAGE (same as --with-PACKAGE=no)
   --with-llvm=PATH        specify path to LLVM
-  --with-mspgcc=PATH      specify path to mspgcc
+  --with-gcc=PATH         specify path to gcc
   --with-mspsim=PATH      specify path to mspsim
 
 Some influential environment variables:
   LLVMPREFIX  Location of LLVM parent directory
   LLVM_BIN    Location of LLVM binaries
   LLVM_LIB    Location of LLVM libraries
-  MSPGCC      Location of mspgcc
+  GCC         Location of gcc
   MSPSIM      Location of mspsim
 
 Use these variables to override the choices made by `configure' or to help
@@ -1967,32 +1968,32 @@ fi
 
 
 
-# Check whether --with-mspgcc was given.
-if test "${with_mspgcc+set}" = set; then :
-  withval=$with_mspgcc;
+# Check whether --with-gcc was given.
+if test "${with_gcc+set}" = set; then :
+  withval=$with_gcc;
 fi
 
-if test -n "$with_mspgcc"; then :
-  # Extract the first word of "gcc", so it can be a program name with args.
-set dummy gcc; ac_word=$2
+if test -n "$with_gcc"; then :
+  # Extract the first word of "msp430-elf-gcc", so it can be a program name with args.
+set dummy msp430-elf-gcc; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_path_MSPGCC+:} false; then :
+if ${ac_cv_path_GCC+:} false; then :
   $as_echo_n "(cached) " >&6
 else
-  case $MSPGCC in
+  case $GCC in
   [\\/]* | ?:[\\/]*)
-  ac_cv_path_MSPGCC="$MSPGCC" # Let the user override the test with a path.
+  ac_cv_path_GCC="$GCC" # Let the user override the test with a path.
   ;;
   *)
   as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in ${with_mspgcc}/bin
+for as_dir in ${with_gcc}/bin
 do
   IFS=$as_save_IFS
   test -z "$as_dir" && as_dir=.
     for ac_exec_ext in '' $ac_executable_extensions; do
   if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_path_MSPGCC="$as_dir/$ac_word$ac_exec_ext"
+    ac_cv_path_GCC="$as_dir/$ac_word$ac_exec_ext"
     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
     break 2
   fi
@@ -2003,10 +2004,10 @@ IFS=$as_save_IFS
   ;;
 esac
 fi
-MSPGCC=$ac_cv_path_MSPGCC
-if test -n "$MSPGCC"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $MSPGCC" >&5
-$as_echo "$MSPGCC" >&6; }
+GCC=$ac_cv_path_GCC
+if test -n "$GCC"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $GCC" >&5
+$as_echo "$GCC" >&6; }
 else
   { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
@@ -2018,12 +2019,12 @@ else
 set dummy msp430-gcc; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_path_MSPGCC+:} false; then :
+if ${ac_cv_path_GCC+:} false; then :
   $as_echo_n "(cached) " >&6
 else
-  case $MSPGCC in
+  case $GCC in
   [\\/]* | ?:[\\/]*)
-  ac_cv_path_MSPGCC="$MSPGCC" # Let the user override the test with a path.
+  ac_cv_path_GCC="$GCC" # Let the user override the test with a path.
   ;;
   *)
   as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
@@ -2033,7 +2034,7 @@ do
   test -z "$as_dir" && as_dir=.
     for ac_exec_ext in '' $ac_executable_extensions; do
   if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_path_MSPGCC="$as_dir/$ac_word$ac_exec_ext"
+    ac_cv_path_GCC="$as_dir/$ac_word$ac_exec_ext"
     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
     break 2
   fi
@@ -2044,10 +2045,10 @@ IFS=$as_save_IFS
   ;;
 esac
 fi
-MSPGCC=$ac_cv_path_MSPGCC
-if test -n "$MSPGCC"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $MSPGCC" >&5
-$as_echo "$MSPGCC" >&6; }
+GCC=$ac_cv_path_GCC
+if test -n "$GCC"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $GCC" >&5
+$as_echo "$GCC" >&6; }
 else
   { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
@@ -2055,10 +2056,11 @@ fi
 
 
 fi
-if test -z "$MSPGCC"; then :
-  as_fn_error $? "mspgcc not found in your PATH; quitting." "$LINENO" 5
+if test -z "$GCC"; then :
+  as_fn_error $? "gcc not found in your PATH; quitting." "$LINENO" 5
 fi
-MSPGCC_HEADERS=`echo | "$MSPGCC" -v -x c -E - 2>&1 | grep /include | awk '{sub(/^ +/, ""); printf " -I%s", $0}'`
+GCC_HEADERS=`echo | "$GCC" -v -x c -E - 2>&1 | awk '/#include <\.\.\.>/{flag=1;next}/End of search list/{flag=0}flag' | awk '{sub(/^ +/, ""); printf " -I%s", $0}'`
+GCC_PATH="$with_gcc"
 
 
 
@@ -2076,6 +2078,7 @@ fi
 
 
 ac_config_files="$ac_config_files Makefile.common"
+
 
 
 

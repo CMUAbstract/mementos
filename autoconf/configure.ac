@@ -25,15 +25,16 @@ AC_PATH_PROG([LLVM_OPT], [opt], [], [${LLVM_BIN}])
 AC_PATH_PROG([LLVM_LLC], [llc], [], [${LLVM_BIN}])
 AC_PATH_PROG([LLVM_LINK], [llvm-link], [], [${LLVM_BIN}])
 
-AC_ARG_VAR([MSPGCC], [Location of mspgcc])
-AC_ARG_WITH(mspgcc,
-	AS_HELP_STRING([--with-mspgcc=PATH], [specify path to mspgcc]))
-AS_IF([test -n "$with_mspgcc"],
-	[AC_PATH_PROG([MSPGCC], [gcc], [], [${with_mspgcc}/bin])],
-	[AC_PATH_PROG([MSPGCC], [msp430-gcc])])
-AS_IF([test -z "$MSPGCC"],
-	[AC_MSG_ERROR([mspgcc not found in your PATH; quitting.])])
-MSPGCC_HEADERS=`echo | "$MSPGCC" -v -x c -E - 2>&1 | grep /include | awk '{sub(/^ +/, ""); printf " -I%s", $0}'`
+AC_ARG_VAR([GCC], [Location of gcc])
+AC_ARG_WITH(gcc,
+	AS_HELP_STRING([--with-gcc=PATH], [specify path to gcc]))
+AS_IF([test -n "$with_gcc"],
+	[AC_PATH_PROG([GCC], [msp430-elf-gcc], [], [${with_gcc}/bin])],
+	[AC_PATH_PROG([GCC], [msp430-gcc])])
+AS_IF([test -z "$GCC"],
+	[AC_MSG_ERROR([gcc not found in your PATH; quitting.])])
+GCC_HEADERS=`echo | "$GCC" -v -x c -E - 2>&1 | awk '/#include <\.\.\.>/{flag=1;next}/End of search list/{flag=0}flag' | awk '{sub(/^ +/, ""); printf " -I%s", $0}'`
+GCC_PATH="$with_gcc"
 
 AC_ARG_VAR([MSPSIM], [Location of mspsim])
 AC_ARG_WITH(mspsim,
@@ -52,8 +53,9 @@ AC_SUBST(prefix)
 AC_SUBST(LLVMPREFIX)
 AC_SUBST(LLVM_BIN)
 AC_SUBST(LLVM_LIB)
-AC_SUBST(MSPGCC)
-AC_SUBST(MSPGCC_HEADERS)
+AC_SUBST(GCC)
+AC_SUBST(GCC_PATH)
+AC_SUBST(GCC_HEADERS)
 AC_SUBST(MSPSIM)
 
 dnl This must be last

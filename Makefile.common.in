@@ -4,8 +4,9 @@ LLVM = @LLVMPREFIX@
 LLVM_BIN = @LLVM_BIN@
 LLVM_LIB = @LLVM_LIB@
 CLANG = @CLANG@
-MSPGCC = @MSPGCC@
-MSPGCCHEADERS = @MSPGCC_HEADERS@
+GCC = @GCC@
+GCC_PATH = @GCC_PATH@
+GCC_HEADERS = @GCC_HEADERS@
 MSPSIM = @MSPSIM@
 
 # toolchain elements
@@ -18,8 +19,22 @@ MCU ?= msp430f2618
 MCUDEF = $(shell echo "$(MCU)" | sed -e 's/^/__/; s/$$/__/; s/x/_/' | tr a-z A-Z)
 
 # compiler flags
-override CFLAGS+=-Wall -I$(PWD)/include $(MSPGCCHEADERS) -D$(MCUDEF) -O0 -emit-llvm -target msp430-elf
-override MCFLAGS+=-Wall -I$(PWD)/include -mmcu=$(MCU)
+override CFLAGS += \
+	-emit-llvm \
+	-target msp430-elf \
+	-D$(MCUDEF) \
+	-O0 \
+	-Wall \
+	$(GCC_HEADERS) \
+	-I$(PWD)/include \
+	-I$(GCC_PATH)/include \
+
+override MCFLAGS += \
+	-mmcu=$(MCU) \
+	-Wall \
+	-I$(PWD)/include \
+	-I$(GCC_PATH)/include \
+	-L$(GCC_PATH)/include \
 
 # OS-specific options
 OS=$(shell uname -s)
