@@ -1,5 +1,13 @@
+#include <mementos.h>
+
+// Application is renamed to this name, defined as MEMENTOS_OLDMAINNAME
+// in llvm/lib/Mementos/Mementos.h
+int _old_main();
+
 __attribute__((section(".init9"), aligned(2)))
 int main (void) {
+    int i;
+
 #ifdef MEMENTOS_TIMER
     __mementos_setup_timer();
 #endif // MEMENTOS_TIMER
