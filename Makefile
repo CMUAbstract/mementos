@@ -22,7 +22,11 @@ MCLIBS += $(MYLIBS)
 
 MEMENTOS_SRCS =
 
-ifdef TIMER
+ifndef USER_MAIN
+MEMENTOS_SRCS += mementos_main.c
+endif
+
+ifdef VOLTAGE_CHECK
 override CFLAGS += -DMEMENTOS_VOLTAGE_CHECK
 endif
 
