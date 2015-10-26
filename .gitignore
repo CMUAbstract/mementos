@@ -1,3 +1,5 @@
+.*.swp
+.*.swo
 /Makefile.common
 autom4te.cache/
 aclocal.m4
@@ -12,3 +14,5 @@ config.log
 /llvm/lib/Mementos/Makefile
 /libmementos_fram.a
 /mementos*.o
+*.so
+*.bc
