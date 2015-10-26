@@ -6,8 +6,6 @@
 extern unsigned int i, j, k;
 extern unsigned int baseaddr;
 
-unsigned int GlobalAllocSize = 0;
-
 #ifndef MEMENTOS_FRAM
 #error Inappropriate use of mementos_fram.c without MEMENTOS_FRAM defined
 #endif
@@ -15,7 +13,7 @@ unsigned int GlobalAllocSize = 0;
 void __mementos_checkpoint (void) {
     /* Size of globals in bytes.  Count this far from the beginning of RAM to
      * capture globals.  Comes from the AddGlobalSizeGlobal pass. */
-    //extern int GlobalAllocSize;
+    extern int GlobalAllocSize;
 
 #ifndef MEMENTOS_ORACLE // always checkpoint when called in oracle mode
 #ifdef MEMENTOS_TIMER
