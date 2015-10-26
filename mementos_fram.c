@@ -202,4 +202,5 @@ void __mementos_fram_clear (unsigned long target) {
 
 unsigned int __mementos_force_free (void) {
     // XXX should never need this, but should implement anyway
+    return 0;
 }
