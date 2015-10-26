@@ -181,18 +181,22 @@ void __mementos_restore (unsigned int b) {
 
 #ifdef MEMENTOS_TIMER
 void __mementos_setup_timer (void) {
-    TACCTL0 = CCIE; // CCR0 interrupt enabled
-    TACCR0 = TIMER_INTERVAL;
-    TACTL = TASSEL_2 + MC_1; // SMCLK, up mode
+    TA0CCTL0 = CCIE; // CCR0 interrupt enabled
+    TA0CCR0 = TIMER_INTERVAL;
+    TA0CTL = TASSEL_2 + MC_1; // SMCLK, up mode
     __bis_status_register(GIE);
     ok_to_checkpoint = 0;
 }
 #endif
 
 #ifdef MEMENTOS_TIMER
-void Timer_A (void) {
+__attribute__ ((interrupt(TIMER0_A0_VECTOR)))
+void TIMER0_A0_ISR (void) {
     //__mementos_checkpoint();
     ok_to_checkpoint = 1;
-    TACCR0 = TIMER_INTERVAL;
+    TA0CCR0 = TIMER_INTERVAL;
+    TA0CCTL0 &= ~CCIFG;
 }
+__attribute__ ((section("__interrupt_vector_timer0_a0"),aligned(2)))
+void (*__vector_timer0_a0)(void) = TIMER0_A0_ISR;
 #endif

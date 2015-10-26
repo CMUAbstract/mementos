@@ -7,7 +7,6 @@ int _old_main();
 // Application must define an 'init' function that initializes hardware
 void init();
 
-__attribute__((section(".init9"), aligned(2)))
 int main (void) {
     int i;
 
