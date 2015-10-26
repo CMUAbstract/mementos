@@ -67,8 +67,6 @@ TARGETS=$(MYLIBS) $(foreach flavor,$(FLAVORS),$(TARGET)+$(flavor))
 all: $(TARGETS)
 
 mementos.c: include/mementos.h
-include/mementos.h: include/mementos.h.tmpl
-	scripts/setthresh.pl $(VTHRESH) $(TIMERINT) include/mementos.h.tmpl >include/mementos.h
 
 .c.bc: include/mementos.h
 	$(CLANG) $(CFLAGS) -c -o $@ $<
@@ -163,7 +161,7 @@ gdbcommands: $(TARGETS)
 
 clean:
 	$(RM) $(TARGETS) *.o samples/*.o *.bc samples/*.bc *.s samples/*.s \
-		include/mementos.h logme *.gdb samples/*.gdb
+		logme *.gdb samples/*.gdb
 
 distclean:
 	$(RM) config.log config.status
