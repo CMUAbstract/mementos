@@ -2072,29 +2072,6 @@ if test -n "$with_mspsim"; then :
 else
   MSPSIM="/opt/mementos/src/mspsim"
 fi
-as_ac_File=`$as_echo "ac_cv_file_${MSPSIM}/dist/mspsim.jar" | $as_tr_sh`
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for ${MSPSIM}/dist/mspsim.jar" >&5
-$as_echo_n "checking for ${MSPSIM}/dist/mspsim.jar... " >&6; }
-if eval \${$as_ac_File+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  test "$cross_compiling" = yes &&
-  as_fn_error $? "cannot check for file existence when cross compiling" "$LINENO" 5
-if test -r "${MSPSIM}/dist/mspsim.jar"; then
-  eval "$as_ac_File=yes"
-else
-  eval "$as_ac_File=no"
-fi
-fi
-eval ac_res=\$$as_ac_File
-	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
-$as_echo "$ac_res" >&6; }
-if eval test \"x\$"$as_ac_File"\" = x"yes"; then :
-
-else
-  as_fn_error $? "mspsim.jar not found in ${MSPSIM}/dist; quitting." "$LINENO" 5
-fi
-
 
 
 
