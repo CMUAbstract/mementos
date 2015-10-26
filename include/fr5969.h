@@ -1,10 +1,4 @@
-#ifdef __MSPGCC__
-#  include <msp430.h>
-#elif defined(__clang__)
-#  include <msp430fr5969.h>
-#else
-#  error Unsupported compiler; use mspgcc or clang.
-#endif
+#include <msp430.h>
 
 #define MEMENTOS_FRAM
 
