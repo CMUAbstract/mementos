@@ -48,6 +48,7 @@ void __mementos_log_event (unsigned char);
 # define __mementos_log_event(x)
 #endif // MEMENTOS_LOGGING
 
+#ifdef MEMENTOS_VOLTAGE_CHECK
 #ifdef MEMENTOS_HARDWARE
 unsigned int __mementos_voltage_check (void);
 #define VOLTAGE_CHECK __mementos_voltage_check()
@@ -57,6 +58,7 @@ unsigned int __mementos_voltage_check (void);
  * it's read. */
 extern volatile unsigned int VOLTAGE_CHECK asm("0x01C0");
 #endif // MEMENTOS_HARDWARE
+#endif // MEMENTOS_VOLTAGE_CHECK
 
 #define MEMENTOS_MAGIC_NUMBER 0xBEADu
 
