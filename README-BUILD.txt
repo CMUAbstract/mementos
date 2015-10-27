@@ -3,6 +3,9 @@ TODO: integrate this into the main readme
 These are notes from using mementos with LLVM v3.8 and GGC v4.9 (successor of
 mspgcc).
 
+$ autoconf/AutoRegen.sh
+$ ./configure --with-gcc=/path/to/ti/msp430-gcc --prefix=/path/to/llvm/install
+
 Build LLVM passes:
  cmake -DCMAKE_BUILD_TYPE="Debug" -DCMAKE_CXX_FLAGS="-std=c++11"  -DCMAKE_PREFIX_PATH=/home/acolin/rs/src/llvm/llvm-install -DCMAKE_INSTALL_PREFIX=/home/acolin/rs/src/llvm/llvm-install -DCMAKE_MODULE_PATH=/home/acolin/rs/src/llvm/llvm-install/share/llvm/cmake .
 
