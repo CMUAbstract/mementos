@@ -4,13 +4,17 @@
 // in llvm/lib/Mementos/Mementos.h
 int _old_main();
 
-// Application must define an 'init' function that initializes hardware
+#ifdef INIT_FUNC
+// Application can define an 'init' function that runs on every boot
 void init();
+#endif // INIT_FUNC
 
 int main (void) {
     int i;
 
+#ifdef INIT_FUNC
     init();
+#endif
 
 #ifdef MEMENTOS_TIMER
     __mementos_setup_timer();

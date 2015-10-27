@@ -26,6 +26,10 @@ ifndef USER_MAIN
 MEMENTOS_SRCS += mementos_main.c
 endif
 
+ifdef INIT_FUNC
+override CFLAGS += -DINIT_FUNC
+endif
+
 ifdef VOLTAGE_CHECK
 override CFLAGS += -DMEMENTOS_VOLTAGE_CHECK
 endif
