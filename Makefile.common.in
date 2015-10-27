@@ -15,8 +15,9 @@ OPT=$(LLVM_BIN)/opt -debug -stats
 LLVM_LINK=$(LLVM_BIN)/llvm-link
 
 # chip to target (unless already defined)
-MCU ?= msp430f2618
+MCU ?= msp430fr5969
 MCUDEF = $(shell echo "$(MCU)" | sed -e 's/^/__/; s/$$/__/; s/x/_/' | tr a-z A-Z)
+FRAM ?= 1 # set depending on the MCU
 
 # compiler flags
 override CFLAGS += \
