@@ -6,6 +6,8 @@
 #define MEMENTOS
 #endif
 
+#define MEMENTOS_MAIN_ATTRIBUTES // legacy def to avoid changing apps
+
 #define MEMREF(x) (*((unsigned int*)(x)))
 
 #endif // __COMMON_H__
