@@ -29,7 +29,7 @@ override CFLAGS += \
 	-I$(PWD)/include \
 	-I$(GCC_PATH)/include \
 
-override MCFLAGS += \
+override GCC_CFLAGS += \
 	-mmcu=$(MCU) \
 	-Wall \
 	-I$(PWD)/include \
