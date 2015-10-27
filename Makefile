@@ -67,7 +67,7 @@ endif
 FLAVORS=latch return timer+latch oracle raw
 TARGETS=$(MYLIBS) $(foreach flavor,$(FLAVORS),mementos+$(flavor).bc)
 
-all: $(TARGETS)
+all: $(TARGETS) mementos_gsize.bc
 
 mementos.c: include/mementos.h
 
@@ -84,6 +84,11 @@ else
 		install -m 0755 $$t $(MSPSIM)/firmware/`basename "$$t"`; \
 	done
 endif
+
+# Special object available to be linked in by the application, when
+# it decides to skip the global sizing pass.
+mementos_gsize.bc: mementos_gsize.c
+	$(CLANG) $(CFLAGS) -o mementos_gsize.bc -c $<
 
 # standalone Mementos bitcode (for linking against)
 mementos+latch.bc: mementos.c $(MEMENTOS_OBJS)
