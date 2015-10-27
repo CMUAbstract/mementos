@@ -64,7 +64,7 @@ ifeq ($(TIMERINT),)
 endif
 
 # which flavors to build
-FLAVORS=latch return timer+latch oracle
+FLAVORS=latch return timer+latch oracle raw
 TARGETS=$(MYLIBS) $(foreach flavor,$(FLAVORS),mementos+$(flavor).bc)
 
 all: $(TARGETS)
@@ -98,6 +98,9 @@ mementos+timer+latch.bc: mementos.c $(MEMENTOS_OBJS)
 mementos+oracle.bc: mementos.c $(MEMENTOS_OBJS)
 	$(CLANG) $(CFLAGS) -o mementos.bc -DMEMENTOS_ORACLE -c $<
 	$(LLVM_LINK) -o $@ mementos.bc $(MEMENTOS_OBJS)
+mementos+raw.bc: mementos.c $(MEMENTOS_OBJS)
+	$(CLANG) $(CFLAGS) -o mementos.bc -DMEMENTOS_ORACLE -c $<
+	$(LLVM_LINK) -o $@ mementos.bc $(filter-out mementos_main.bc,$(MEMENTOS_OBJS))
 
 msp430builtins.o: msp430builtins.S
 	$(GCC) $(GCC_CFLAGS) -c -o $@ $<
