@@ -7,6 +7,7 @@
 unsigned int baseaddr;
 unsigned int i, j, k;
 unsigned int tmpsize;
+unsigned int __mementos_restored; // set when execution resumed from a checkpoint
 // unsigned int interrupts_enabled;
 #ifdef MEMENTOS_TIMER
 bool ok_to_checkpoint;
@@ -18,6 +19,8 @@ void __mementos_restore (unsigned int b) {
      * (in bytes) of the stack portion of the bundle and the low byte designates
      * the size (in bytes) of the data-segment portion of the bundle. */
     baseaddr = b; // XXX
+
+    __mementos_restored = 0x1;
 
     __mementos_log_event(MEMENTOS_STATUS_STARTING_RESTORATION);
 

@@ -81,5 +81,10 @@ void Timer_A (void) __attribute__((interrupt(12))); // 0xFFEC for F1611 XXX
 
 typedef unsigned char bool;
 
+// Flag set when execution resumed from a checkpoint, useful for libraries
+// built on top of mementos, since they can't keep a flag like this because
+// it would be included into the checkpoint and overwritten.
+extern unsigned int __mementos_restored;
+
 #endif /* __MEMENTOS_H__ */
 // vim:ft=c
