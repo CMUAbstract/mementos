@@ -1,5 +1,7 @@
 /* See license.txt for licensing information. */
 
+#include <stdbool.h>
+
 #include <mementos.h>
 #include <msp430builtins.h> // XXX hack
 
