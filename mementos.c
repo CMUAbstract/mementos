@@ -84,8 +84,7 @@ void __mementos_restore (unsigned int b) {
     // grab the size of the size of the globals we'll have to restore
     asm volatile("MOV %0, R7" ::"m"(tmpsize));  // R7(stacksize) = tmpsize
     asm volatile("MOV %0, R6" ::"m"(baseaddr)); // R6(baseaddr)  = baseaddr
-    asm volatile("MOV @R6, R8");                // R8(globalsize) =
-    asm volatile("AND #255, R8");               //   MEMREF(baseaddr) & 0x00FF
+    asm volatile("MOV @R6, R8");                // R8(globalsize) = MEMREF(baseaddr)
 
     asm volatile("CLR.W R9");                    // R9(i) = 0 // induction var
     asm volatile("rdloop:");                     // will jump back up here

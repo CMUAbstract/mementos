@@ -95,7 +95,7 @@ void __mementos_checkpoint (void) {
     // store GlobalAllocSize into R13, round it up to the next word boundary
     asm volatile ("MOV %0, R13" ::"m"(GlobalAllocSize));
     asm volatile ("INC R13");
-    asm volatile ("AND #0xFE, R13");
+    asm volatile ("AND #0xFFFE, R13");
 
     // write GlobalAllocSize to low word at baseaddr
     asm volatile ("MOV R13, 0(R12)");
