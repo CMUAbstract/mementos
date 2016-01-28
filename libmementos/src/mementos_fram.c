@@ -28,7 +28,7 @@ void __mementos_checkpoint (void) {
 #ifdef MEMENTOS_TIMER
         ok_to_checkpoint = 0; // put the flag back down
 #endif // MEMENTOS_TIMER
-        asm volatile ("RET"); // would 'return', but that triggers a bug XXX
+        __asm__ volatile ("RET"); // would 'return', but that triggers a bug XXX
     }
 #endif // MEMENTOS_VOLTAGE_CHECK
 #endif // MEMENTOS_ORACLE
@@ -51,28 +51,28 @@ void __mementos_checkpoint (void) {
       match but the behavior seems to be the same.
     */
      
-    asm volatile ("PUSH 4(R1)");     // PC will appear at 28(R1)
-    asm volatile ("NOP");            // This NOP is required.  See note above.
-    asm volatile ("PUSH R1");        // SP will appear at 26(R1)
-    asm volatile ("ADD #6, 0(R1)");  // +6 to account for FP (pushed in preamble) + PC + R1
-    asm volatile ("PUSH R2");        // R2  will appear at 24(R1)
+    __asm__ volatile ("PUSH 4(R1)");     // PC will appear at 28(R1)
+    __asm__ volatile ("NOP");            // This NOP is required.  See note above.
+    __asm__ volatile ("PUSH R1");        // SP will appear at 26(R1)
+    __asm__ volatile ("ADD #6, 0(R1)");  // +6 to account for FP (pushed in preamble) + PC + R1
+    __asm__ volatile ("PUSH R2");        // R2  will appear at 24(R1)
     // skip R3 (constant generator)
-    asm volatile ("PUSH 8(R1)");     // R4  will appear at 22(R1) [see note above]
-    asm volatile ("PUSH R5");        // R5  will appear at 20(R1)
-    asm volatile ("PUSH R6");        // R6  will appear at 18(R1)
-    asm volatile ("PUSH R7");        // R7  will appear at 16(R1)
-    asm volatile ("PUSH R8");        // R8  will appear at 14(R1)
-    asm volatile ("PUSH R9");        // R9  will appear at 12(R1)
-    asm volatile ("PUSH R10");       // R10 will appear at 10(R1)
-    asm volatile ("PUSH R11");       // R11 will appear at 8(R1)
-    asm volatile ("PUSH R12");       // R12 will appear at 6(R1)
-    asm volatile ("PUSH R13");       // R13 will appear at 4(R1)
-    asm volatile ("PUSH R14");       // R14 will appear at 2(R1)
-    asm volatile ("PUSH R15");       // R15 will appear at 0(R1)
+    __asm__ volatile ("PUSH 8(R1)");     // R4  will appear at 22(R1) [see note above]
+    __asm__ volatile ("PUSH R5");        // R5  will appear at 20(R1)
+    __asm__ volatile ("PUSH R6");        // R6  will appear at 18(R1)
+    __asm__ volatile ("PUSH R7");        // R7  will appear at 16(R1)
+    __asm__ volatile ("PUSH R8");        // R8  will appear at 14(R1)
+    __asm__ volatile ("PUSH R9");        // R9  will appear at 12(R1)
+    __asm__ volatile ("PUSH R10");       // R10 will appear at 10(R1)
+    __asm__ volatile ("PUSH R11");       // R11 will appear at 8(R1)
+    __asm__ volatile ("PUSH R12");       // R12 will appear at 6(R1)
+    __asm__ volatile ("PUSH R13");       // R13 will appear at 4(R1)
+    __asm__ volatile ("PUSH R14");       // R14 will appear at 2(R1)
+    __asm__ volatile ("PUSH R15");       // R15 will appear at 0(R1)
 
     /**** figure out where to put this checkpoint bundle ****/
     /* precompute the size of the stack portion of the bundle */
-    asm volatile ("MOV 26(R1), %0" :"=m"(j)); // j = SP
+    __asm__ volatile ("MOV 26(R1), %0" :"=m"(j)); // j = SP
     /* j now contains the pre-call value of the stack pointer */
 
     baseaddr = __mementos_locate_next_bundle();
@@ -81,46 +81,46 @@ void __mementos_checkpoint (void) {
  
     //Save these registers so we can put them back after
     //we're done using them to compute the size of the stack
-    asm volatile ("PUSH R12");
-    asm volatile ("PUSH R13");
+    __asm__ volatile ("PUSH R12");
+    __asm__ volatile ("PUSH R13");
 
     // compute size of stack (in bytes) into R13
-    asm volatile ("MOV #" xstr(TOPOFSTACK) ", R13");
-    asm volatile ("SUB %0, R13" ::"m"(j)); // j == old stack pointer
+    __asm__ volatile ("MOV #" xstr(TOPOFSTACK) ", R13");
+    __asm__ volatile ("SUB %0, R13" ::"m"(j)); // j == old stack pointer
 
     // write size of stack (R13) to high word at baseaddr
-    asm volatile ("MOV %0, R12" ::"m"(baseaddr));
-    asm volatile ("MOV R13, 2(R12)");
+    __asm__ volatile ("MOV %0, R12" ::"m"(baseaddr));
+    __asm__ volatile ("MOV R13, 2(R12)");
 
     // store GlobalAllocSize into R13, round it up to the next word boundary
-    asm volatile ("MOV %0, R13" ::"m"(GlobalAllocSize));
-    asm volatile ("INC R13");
-    asm volatile ("AND #0xFFFE, R13");
+    __asm__ volatile ("MOV %0, R13" ::"m"(GlobalAllocSize));
+    __asm__ volatile ("INC R13");
+    __asm__ volatile ("AND #0xFFFE, R13");
 
     // write GlobalAllocSize to low word at baseaddr
-    asm volatile ("MOV R13, 0(R12)");
+    __asm__ volatile ("MOV R13, 0(R12)");
 
-    asm volatile ("POP R13");
-    asm volatile ("POP R12");
+    __asm__ volatile ("POP R13");
+    __asm__ volatile ("POP R12");
 
     /********** phase #1: checkpoint registers. **********/
-    asm volatile ("MOV %0, R14" ::"m"(baseaddr));
-    asm volatile ("POP 32(R14)"); // R15
-    asm volatile ("POP 30(R14)"); // R14
-    asm volatile ("POP 28(R14)"); // R13
-    asm volatile ("POP 26(R14)"); // R12
-    asm volatile ("POP 24(R14)"); // R11
-    asm volatile ("POP 22(R14)"); // R10
-    asm volatile ("POP 20(R14)"); // R9
-    asm volatile ("POP 18(R14)"); // R8
-    asm volatile ("POP 16(R14)"); // R7
-    asm volatile ("POP 14(R14)"); // R6
-    asm volatile ("POP 12(R14)"); // R5
-    asm volatile ("POP 10(R14)");  // R4
+    __asm__ volatile ("MOV %0, R14" ::"m"(baseaddr));
+    __asm__ volatile ("POP 32(R14)"); // R15
+    __asm__ volatile ("POP 30(R14)"); // R14
+    __asm__ volatile ("POP 28(R14)"); // R13
+    __asm__ volatile ("POP 26(R14)"); // R12
+    __asm__ volatile ("POP 24(R14)"); // R11
+    __asm__ volatile ("POP 22(R14)"); // R10
+    __asm__ volatile ("POP 20(R14)"); // R9
+    __asm__ volatile ("POP 18(R14)"); // R8
+    __asm__ volatile ("POP 16(R14)"); // R7
+    __asm__ volatile ("POP 14(R14)"); // R6
+    __asm__ volatile ("POP 12(R14)"); // R5
+    __asm__ volatile ("POP 10(R14)");  // R4
     // skip R3 (constant generator)
-    asm volatile ("POP 8(R14)");  // R2
-    asm volatile ("POP 6(R14)");  // R1
-    asm volatile ("POP 4(R14)");    // R0
+    __asm__ volatile ("POP 8(R14)");  // R2
+    __asm__ volatile ("POP 6(R14)");  // R1
+    __asm__ volatile ("POP 4(R14)");    // R0
 
     /********** phase #2: checkpoint memory. **********/
 

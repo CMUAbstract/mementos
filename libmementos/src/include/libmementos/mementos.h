@@ -3,24 +3,26 @@
 #ifndef __MEMENTOS_H__
 #define __MEMENTOS_H__
 
+#include <stdbool.h>
+
 #if defined(__MSP430F2131__)
-#  include <f2131.h>
+#  include <libmementos/f2131.h>
 #elif defined(__MSP430F2132__)
-#  include <f2132.h>
+#  include <libmementos/f2132.h>
 #elif defined(__MSP430F1611__)
-#  include <f1611.h>
+#  include <libmementos/f1611.h>
 #elif defined(__MSP430F2618__)
-#  include <f2618.h>
+#  include <libmementos/f2618.h>
 #elif defined(__MSP430FR5969__)
-#  include <fr5969.h>
+#  include <libmementos/fr5969.h>
 #else
 #  error Missing or unsupported chip.
 #endif
 
 #ifdef MEMENTOS_FRAM
-#  include <mementos_fram.h>
+#  include <libmementos/mementos_fram.h>
 #else
-#  include <mementos_flash.h>
+#  include <libmementos/mementos_flash.h>
 #endif
 
 #define RAM_SIZE (TOPOFSTACK+1 - STARTOFDATA)
@@ -83,6 +85,10 @@ void Timer_A (void) __attribute__((interrupt(12))); // 0xFFEC for F1611 XXX
 // built on top of mementos, since they can't keep a flag like this because
 // it would be included into the checkpoint and overwritten.
 extern unsigned int __mementos_restored;
+
+#ifdef MEMENTOS_TIMER
+extern bool ok_to_checkpoint;
+#endif // MEMENTOS_TIMER
 
 #endif /* __MEMENTOS_H__ */
 // vim:ft=c

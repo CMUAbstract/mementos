@@ -37,7 +37,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define __MSP430BUILTINS_H__
 
 #define __bis_status_register(x) \
-    do { asm volatile("BIS %0, R2" ::"i"((x))); } while (0);
+    do { __asm__ volatile("BIS %0, R2" ::"i"((x))); } while (0);
 
 extern int __mulhi3hw_noint (int a, int b);
 

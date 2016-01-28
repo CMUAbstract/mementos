@@ -28,7 +28,7 @@ void __mementos_restore (unsigned int b) {
 
     /*
     // disable interrupts -- they wouldn't be helpful here
-    asm volatile ("DINT");
+    __asm__ volatile ("DINT");
     */
     //              GS SS 
     /*baseaddr+0-->[--|--|      //global size and stack size
@@ -50,21 +50,21 @@ void __mementos_restore (unsigned int b) {
         */
 
         // j = TOPOFSTACK - i - 2;
-        asm volatile("MOV #" xstr(TOPOFSTACK) ", %0" :"=m"(j));
-        asm volatile("SUB %0, %1" :"=m"(i) :"m"(j));
-        asm volatile("DECD.W %0" ::"m"(j));
+        __asm__ volatile("MOV #" xstr(TOPOFSTACK) ", %0" :"=m"(j));
+        __asm__ volatile("SUB %0, %1" :"=m"(i) :"m"(j));
+        __asm__ volatile("DECD.W %0" ::"m"(j));
 
         // k = baseaddr + BUNDLE_SIZE_REGISTERS + 4 + tmpsize - i;
-        asm volatile("MOV %1, %0" :"=m"(k) :"m"(baseaddr));
-        asm volatile("ADD #" xstr(BUNDLE_SIZE_REGISTERS) ", %0" ::"m"(k));
-        asm volatile("ADD #2, %0" ::"m"(k));
-        asm volatile("ADD %1, %0" :"=m"(k) :"m"(tmpsize));
-        asm volatile("SUB %1, %0" :"=m"(k) :"m"(i));
+        __asm__ volatile("MOV %1, %0" :"=m"(k) :"m"(baseaddr));
+        __asm__ volatile("ADD #" xstr(BUNDLE_SIZE_REGISTERS) ", %0" ::"m"(k));
+        __asm__ volatile("ADD #2, %0" ::"m"(k));
+        __asm__ volatile("ADD %1, %0" :"=m"(k) :"m"(tmpsize));
+        __asm__ volatile("SUB %1, %0" :"=m"(k) :"m"(i));
 
         // MEMREF(j) = MEMREF(k);
-        asm volatile("MOV %0, R7" ::"m"(k));
-        asm volatile("MOV %0, R8" ::"m"(j));
-        asm volatile("MOV @R7, 0(R8)");
+        __asm__ volatile("MOV %0, R7" ::"m"(k));
+        __asm__ volatile("MOV %0, R8" ::"m"(j));
+        __asm__ volatile("MOV @R7, 0(R8)");
     }
 
     /* restore the data segment without trampling on our own globals.
@@ -82,54 +82,54 @@ void __mementos_restore (unsigned int b) {
      */
 
     // grab the size of the size of the globals we'll have to restore
-    asm volatile("MOV %0, R7" ::"m"(tmpsize));  // R7(stacksize) = tmpsize
-    asm volatile("MOV %0, R6" ::"m"(baseaddr)); // R6(baseaddr)  = baseaddr
-    asm volatile("MOV @R6, R8");                // R8(globalsize) = MEMREF(baseaddr)
+    __asm__ volatile("MOV %0, R7" ::"m"(tmpsize));  // R7(stacksize) = tmpsize
+    __asm__ volatile("MOV %0, R6" ::"m"(baseaddr)); // R6(baseaddr)  = baseaddr
+    __asm__ volatile("MOV @R6, R8");                // R8(globalsize) = MEMREF(baseaddr)
 
-    asm volatile("CLR.W R9");                    // R9(i) = 0 // induction var
-    asm volatile("rdloop:");                     // will jump back up here
-    asm volatile("CMP R8, R9");                // if (i >= globalsize)
-    asm volatile("JC afterrd");                  //   <stop looping>
+    __asm__ volatile("CLR.W R9");                    // R9(i) = 0 // induction var
+    __asm__ volatile("rdloop:");                     // will jump back up here
+    __asm__ volatile("CMP R8, R9");                // if (i >= globalsize)
+    __asm__ volatile("JC afterrd");                  //   <stop looping>
 
     // copy one word at a time from checkpoint to data segment
-    asm volatile("MOV R6, R10");               // R10 = baseaddr
-    asm volatile("ADD #34, R10");              // this constant is ugly now, but 34 is SS + GS + REGS 
-    asm volatile("ADD R7, R10");               // + stacksize
-    asm volatile("ADD R9, R10");               // + i, which is the counter for which glob we're on
-    asm volatile("MOV 0(R10), " xstr(STARTOFDATA) "(R9)"); // MEMREF(STARTOFDATA+i(R9)) =
+    __asm__ volatile("MOV R6, R10");               // R10 = baseaddr
+    __asm__ volatile("ADD #34, R10");              // this constant is ugly now, but 34 is SS + GS + REGS 
+    __asm__ volatile("ADD R7, R10");               // + stacksize
+    __asm__ volatile("ADD R9, R10");               // + i, which is the counter for which glob we're on
+    __asm__ volatile("MOV 0(R10), " xstr(STARTOFDATA) "(R9)"); // MEMREF(STARTOFDATA+i(R9)) =
                                                          //    MEMREF(R10)
-    asm volatile("INCD R9");                     // i += 2
-    asm volatile("JMP rdloop");                  // to beginning of loop
+    __asm__ volatile("INCD R9");                     // i += 2
+    __asm__ volatile("JMP rdloop");                  // to beginning of loop
 
-    asm volatile("afterrd:");                    // jump here when done
+    __asm__ volatile("afterrd:");                    // jump here when done
 
     /* set baseaddr back to whatever it was -- BRANDON: why???*/
-    asm volatile("MOV R6, %0" :"=m"(baseaddr));
+    __asm__ volatile("MOV R6, %0" :"=m"(baseaddr));
 
     /* finally, restore all the registers, starting at R15 and counting down to
      * R0/PC.  setting R0/PC is an implicit jump, so we have to do it last. */
 
     /* j = <PC to restore> (note: R6 still contains baseaddr) */
-    asm volatile ("MOV 4(R6), %0" :"=m"(j));
+    __asm__ volatile ("MOV 4(R6), %0" :"=m"(j));
 
     /* set the SP first, so we can PUSH stuff; we'll reset it later */
-    asm volatile ("MOV 6(R6), R1");
+    __asm__ volatile ("MOV 6(R6), R1");
     /* now push the saved register values onto the stack (R6=baseaddr) */
     
-    asm volatile ("MOV 32(R6), R15");  // R15
-    asm volatile ("MOV 30(R6), R14");  // R14
-    asm volatile ("MOV 28(R6), R13");  // R13
-    asm volatile ("MOV 26(R6), R12");  // R12
-    asm volatile ("MOV 24(R6), R11");  // R11
-    asm volatile ("MOV 22(R6), R10");  // R10
-    asm volatile ("MOV 20(R6), R9");  // R9
-    asm volatile ("MOV 18(R6), R8");  // R8
-    asm volatile ("MOV 16(R6), R7");  // R7
-    asm volatile ("MOV 12(R6), R5");  // R5
-    asm volatile ("MOV 10(R6), R4");  // R4
+    __asm__ volatile ("MOV 32(R6), R15");  // R15
+    __asm__ volatile ("MOV 30(R6), R14");  // R14
+    __asm__ volatile ("MOV 28(R6), R13");  // R13
+    __asm__ volatile ("MOV 26(R6), R12");  // R12
+    __asm__ volatile ("MOV 24(R6), R11");  // R11
+    __asm__ volatile ("MOV 22(R6), R10");  // R10
+    __asm__ volatile ("MOV 20(R6), R9");  // R9
+    __asm__ volatile ("MOV 18(R6), R8");  // R8
+    __asm__ volatile ("MOV 16(R6), R7");  // R7
+    __asm__ volatile ("MOV 12(R6), R5");  // R5
+    __asm__ volatile ("MOV 10(R6), R4");  // R4
     // skip R3 (CG)
-    asm volatile ("MOV 8(R6), R2");   // R2
-    asm volatile ("MOV 6(R6), R1");   // R1
+    __asm__ volatile ("MOV 8(R6), R2");   // R2
+    __asm__ volatile ("MOV 6(R6), R1");   // R1
 
     /*Why do R6 and R0 this way?  Because baseaddr is
       in R6.  That means we need to save R0 before over
@@ -138,49 +138,49 @@ void __mementos_restore (unsigned int b) {
       Then, after we recover R6, we can pop R0 from the stack into its home,
       redirecting control flow to the point in the checkpoint.
     */
-    asm volatile ("PUSH 4(R6)");  // R6
-    asm volatile ("MOV 14(R6), R6");  // R6
-    asm volatile ("POP R0");   // R0
+    __asm__ volatile ("PUSH 4(R6)");  // R6
+    __asm__ volatile ("MOV 14(R6), R6");  // R6
+    __asm__ volatile ("POP R0");   // R0
     
 
-    /*asm volatile ("PUSH 32(R6)");  // R15
-    asm volatile ("PUSH 30(R6)");  // R14
-    asm volatile ("PUSH 28(R6)");  // R13
-    asm volatile ("PUSH 26(R6)");  // R12
-    asm volatile ("PUSH 24(R6)");  // R11
-    asm volatile ("PUSH 22(R6)");  // R10
-    asm volatile ("PUSH 20(R6)");  // R9
-    asm volatile ("PUSH 18(R6)");  // R8
-    asm volatile ("PUSH 16(R6)");  // R7
-    asm volatile ("PUSH 14(R6)");  // R6
-    asm volatile ("PUSH 12(R6)");  // R5
-    asm volatile ("PUSH 10(R6)");  // R4
+    /*__asm__ volatile ("PUSH 32(R6)");  // R15
+    __asm__ volatile ("PUSH 30(R6)");  // R14
+    __asm__ volatile ("PUSH 28(R6)");  // R13
+    __asm__ volatile ("PUSH 26(R6)");  // R12
+    __asm__ volatile ("PUSH 24(R6)");  // R11
+    __asm__ volatile ("PUSH 22(R6)");  // R10
+    __asm__ volatile ("PUSH 20(R6)");  // R9
+    __asm__ volatile ("PUSH 18(R6)");  // R8
+    __asm__ volatile ("PUSH 16(R6)");  // R7
+    __asm__ volatile ("PUSH 14(R6)");  // R6
+    __asm__ volatile ("PUSH 12(R6)");  // R5
+    __asm__ volatile ("PUSH 10(R6)");  // R4
     // skip R3 (CG)
-    asm volatile ("PUSH 8(R6)");   // R2
-    asm volatile ("PUSH 6(R6)");   // R1
-    asm volatile ("PUSH 4(R6)");   // R0*/
+    __asm__ volatile ("PUSH 8(R6)");   // R2
+    __asm__ volatile ("PUSH 6(R6)");   // R1
+    __asm__ volatile ("PUSH 4(R6)");   // R0*/
 
     /* finally, overwrite the register file with the saved values from the
      * stack!  don't do the PC yet! */
-    /*asm volatile ("MOV 30(R1), R15");
-    asm volatile ("MOV 28(R1), R14");
-    asm volatile ("MOV 26(R1), R13");
-    asm volatile ("MOV 24(R1), R12");
-    asm volatile ("MOV 22(R1), R11");
-    asm volatile ("MOV 20(R1), R10");
-    asm volatile ("MOV 18(R1), R9");
-    asm volatile ("MOV 16(R1), R8");
-    asm volatile ("MOV 14(R1), R7");
-    asm volatile ("MOV 12(R1), R6");
-    asm volatile ("MOV 10(R1), R5");
-    asm volatile ("MOV 8(R1), R4");
-    asm volatile ("MOV  6(R1), R2");*/
+    /*__asm__ volatile ("MOV 30(R1), R15");
+    __asm__ volatile ("MOV 28(R1), R14");
+    __asm__ volatile ("MOV 26(R1), R13");
+    __asm__ volatile ("MOV 24(R1), R12");
+    __asm__ volatile ("MOV 22(R1), R11");
+    __asm__ volatile ("MOV 20(R1), R10");
+    __asm__ volatile ("MOV 18(R1), R9");
+    __asm__ volatile ("MOV 16(R1), R8");
+    __asm__ volatile ("MOV 14(R1), R7");
+    __asm__ volatile ("MOV 12(R1), R6");
+    __asm__ volatile ("MOV 10(R1), R5");
+    __asm__ volatile ("MOV 8(R1), R4");
+    __asm__ volatile ("MOV  6(R1), R2");*/
     /* now set the stack pointer -- don't use any more locals from
     * here to when we restore the PC */
-    //asm volatile ("MOV  4(R1), R1");
+    //__asm__ volatile ("MOV  4(R1), R1");
 
     //j = MEMREF_UINT(baseaddr + BUNDLE_SIZE_HEADER);
-    //asm volatile ("MOV %0, R0" ::"m"(j)); // implicit jump ... restored!
+    //__asm__ volatile ("MOV %0, R0" ::"m"(j)); // implicit jump ... restored!
 }
 
 #ifdef MEMENTOS_TIMER

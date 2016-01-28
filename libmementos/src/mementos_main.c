@@ -4,15 +4,15 @@
 // in llvm/lib/Mementos/Mementos.h
 int _old_main();
 
-#ifdef INIT_FUNC
+#ifdef MEMENTOS_INIT_FUNC
 // Application can define an 'init' function that runs on every boot
 void init();
-#endif // INIT_FUNC
+#endif // MEMENTOS_INIT_FUNC
 
 int main (void) {
     int i;
 
-#ifdef INIT_FUNC
+#ifdef MEMENTOS_INIT_FUNC
     init();
 #endif
 
