@@ -5,7 +5,7 @@ Building:
 
 2. Build the Mementos pass with CMake:
 
-    $ cd mementos/llvm
-    $ cmake -DCMAKE_PREFIX_PATH=/opt/llvm -DCMAKE_INSTALL_PREFIX=/opt/llvm .
+    $ mkdir llvm/bld
+    $ cd llvm/bld
+    $ cmake -DCMAKE_PREFIX_PATH=/opt/llvm -DCMAKE_MODULE_PATH=/opt/llvm/share/llvm/cmake ..
     $ make
-    $ make install
