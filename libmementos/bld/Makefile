@@ -1,4 +1,3 @@
-include $(MEMENTOS_ROOT)/Makefile.config
 include $(MEMENTOS_ROOT)/Makefile.flags
 
 override SRC_ROOT = ../../src

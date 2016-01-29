@@ -2,6 +2,8 @@
 # because it may be included by consumers who include mementos.h,
 # since mementos.h is parametrized by these compiler flags.
 
+include $(MEMENTOS_ROOT)/Makefile.config
+
 ifeq ($(MEMENTOS_HARDWARE),1)
 CFLAGS += -DMEMENTOS_HARDWARE
 endif
