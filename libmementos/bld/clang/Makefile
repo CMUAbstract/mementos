@@ -2,7 +2,7 @@ include $(MEMENTOS_ROOT)/Makefile.config
 
 SRC_ROOT = ../../src
 
-EXEC = libmementos.a.bc
+LIB = libmementos
 
 OBJECTS = \
 	mementos.o \
