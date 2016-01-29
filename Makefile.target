@@ -1,5 +1,3 @@
-SELF_ROOT := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
-
 include $(MAKER_ROOT)/Makefile.env
 
 CFLAGS += \
@@ -7,7 +5,7 @@ CFLAGS += \
 
 LLC_FLAGS=-combiner-alias-analysis
 
-OPT_MODULES = $(SELF_ROOT)/llvm/bld/lib/Mementos.so
+OPT_MODULES = $(MEMENTOS_ROOT)/llvm/bld/lib/Mementos.so
 OPT_FLAGS=-debug -stats
 
 ifeq ($(MEMENTOS_NONVOLATILE),1)
@@ -45,6 +43,6 @@ CFLAGS += -DMEMENTOS_ORACLE
 endif
 
 DEPS += libmementos
-DEP_ROOT_libmementos = $(SELF_ROOT)
+DEP_ROOT_libmementos = $(MEMENTOS_ROOT)
 
 include $(MAKER_ROOT)/Makefile.clang
