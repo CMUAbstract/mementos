@@ -31,6 +31,6 @@ else
 $(error Unrecognized MEMENTOS_NVMEM_TYPE: "$(MEMENTOS_NVMEM_TYPE)")
 endif
 
-CFLAGS += \
+override CFLAGS += \
 	-I$(SRC_ROOT)/include \
 	-I$(SRC_ROOT)/include/libmementos \
