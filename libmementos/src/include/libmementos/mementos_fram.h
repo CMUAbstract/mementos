@@ -1,8 +1,6 @@
 #define FRAM_FIRST_BUNDLE_SEG (FRAM_END+1 - (2*(TOPOFSTACK+1 - STARTOFDATA)))
 #define FRAM_SECOND_BUNDLE_SEG (FRAM_FIRST_BUNDLE_SEG + (TOPOFSTACK+1 - STARTOFDATA) - 1)
 
-#define ACTIVE_BUNDLE_PTR (FRAM_FIRST_BUNDLE_SEG - (sizeof(unsigned int)))
-
 void __mementos_checkpoint (void);
 void __mementos_restore (unsigned int);
 unsigned int __mementos_locate_next_bundle (void);
