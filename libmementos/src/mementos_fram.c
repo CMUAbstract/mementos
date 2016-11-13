@@ -5,6 +5,7 @@
 
 extern unsigned int i, j, k;
 extern unsigned int baseaddr;
+extern unsigned int __mementos_last_restore_pc;
 
 #ifndef MEMENTOS_FRAM
 #error Inappropriate use of mementos_fram.c without MEMENTOS_FRAM defined
@@ -140,6 +141,14 @@ void __mementos_checkpoint (void) {
         MEMREF_UINT(k + (i - STARTOFDATA)) = MEMREF_UINT(i);
     }
     k += (i - STARTOFDATA); // skip over checkpointed globals
+
+    // We completed a checkpoint (*), so clear the last restore info.
+    // NOTE: (*) Ideally, this would be atomic with the checkpoint operation. To
+    // accomplish that, we'd need to redesign so that the restore bit/info is
+    // part of the checkpoint. As we have it now, there is a (negligible) chance
+    // that a stuck path would not get detected -- if power fails between this
+    // clearing of the last restore PC and the finalizing of the checkpoint.
+    __mementos_last_restore_pc = 0x0;
 
     // write the magic number
     MEMREF_UINT(k) = MEMENTOS_MAGIC_NUMBER;

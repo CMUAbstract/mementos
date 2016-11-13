@@ -5,11 +5,20 @@
 #include <mementos.h>
 #include <msp430builtins.h> // XXX hack
 
+#ifdef MEMENTOS_STUCK_PATH_WATCHPOINT
+#include <libmspbuiltins/builtins.h>
+#include <libmsp/mem.h>
+#include <libedb/edb.h>
+#endif // MEMENTOS_STUCK_PATH_WATCHPOINT
+
 // extern int _old_main (void);
 unsigned int baseaddr;
 unsigned int i, j, k;
 unsigned int tmpsize;
 unsigned int __mementos_restored; // set when execution resumed from a checkpoint
+#ifdef MEMENTOS_STUCK_PATH_WATCHPOINT
+__ro_nv unsigned int __mementos_last_restore_pc; // TODO: does __nv not work?
+#endif // MEMENTOS_STUCK_PATH_WATCHPOINT
 // unsigned int interrupts_enabled;
 #ifdef MEMENTOS_TIMER
 bool ok_to_checkpoint;
@@ -23,6 +32,15 @@ void __mementos_restore (unsigned int b) {
     baseaddr = b; // XXX
 
     __mementos_restored = 0x1;
+
+    // Stuck path detection
+#ifdef MEMENTOS_STUCK_PATH_WATCHPOINT
+    unsigned int restore_pc = MEMREF_UINT(baseaddr + 4); // PC field in checkpoint
+    if (restore_pc == __mementos_last_restore_pc) {
+        WATCHPOINT(MEMENTOS_STUCK_PATH_WATCHPOINT);
+    }
+    __mementos_last_restore_pc = restore_pc;
+#endif // MEMENTOS_STUCK_PATH_WATCHPOINT
 
     __mementos_log_event(MEMENTOS_STATUS_STARTING_RESTORATION);
 

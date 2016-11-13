@@ -31,6 +31,11 @@ else
 $(error Unrecognized MEMENTOS_NVMEM_TYPE: "$(MEMENTOS_NVMEM_TYPE)")
 endif
 
+ifneq ($(MEMENTOS_STUCK_PATH_WATCHPOINT),)
+override CFLAGS += -DMEMENTOS_STUCK_PATH_WATCHPOINT=$(MEMENTOS_STUCK_PATH_WATCHPOINT)
+override DEPS += libedb libmsp libmspbuiltins
+endif # MEMENTOS_STUCK_PATH_WATCHPOINT
+
 override CFLAGS += \
 	-I$(SRC_ROOT)/include \
 	-I$(SRC_ROOT)/include/libmementos \

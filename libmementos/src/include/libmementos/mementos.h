@@ -85,6 +85,7 @@ void Timer_A (void) __attribute__((interrupt(12))); // 0xFFEC for F1611 XXX
 // built on top of mementos, since they can't keep a flag like this because
 // it would be included into the checkpoint and overwritten.
 extern unsigned int __mementos_restored;
+extern unsigned int __mementos_restored_pc; // program counter from current checkpoint
 
 #ifdef MEMENTOS_TIMER
 extern bool ok_to_checkpoint;
