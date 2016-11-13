@@ -3,6 +3,9 @@
 #include <mementos.h>
 #include <msp430builtins.h>
 
+__attribute__((section(".nv_vars")))
+unsigned int *__mementos_active_bundle_ptr = (unsigned int *)0xffff;
+
 extern unsigned int i, j, k;
 extern unsigned int baseaddr;
 extern unsigned int __mementos_last_restore_pc;
@@ -15,6 +18,7 @@ void __mementos_checkpoint (void) {
     /* Size of globals in bytes.  Count this far from the beginning of RAM to
      * capture globals.  Comes from the AddGlobalSizeGlobal pass. */
     extern int GlobalAllocSize;
+
 
 #ifndef MEMENTOS_ORACLE // always checkpoint when called in oracle mode
 #ifdef MEMENTOS_TIMER
@@ -152,7 +156,7 @@ void __mementos_checkpoint (void) {
 
     // write the magic number
     MEMREF_UINT(k) = MEMENTOS_MAGIC_NUMBER;
-    MEMREF_UINT(ACTIVE_BUNDLE_PTR) = baseaddr;
+    __mementos_active_bundle_ptr = (unsigned int *)baseaddr;
     __mementos_log_event(MEMENTOS_STATUS_COMPLETED_CHECKPOINT);
 
 #ifdef MEMENTOS_TIMER
@@ -182,7 +186,7 @@ unsigned int __mementos_locate_next_bundle () {
 }
 
 unsigned int __mementos_find_active_bundle (void) {
-    unsigned int active_ptr = MEMREF_UINT(ACTIVE_BUNDLE_PTR);
+    unsigned int active_ptr = (unsigned int)__mementos_active_bundle_ptr;
     if (__mementos_bundle_in_range(active_ptr))
         return active_ptr;
     return 0xffff;
