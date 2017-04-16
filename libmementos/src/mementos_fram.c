@@ -8,7 +8,9 @@ unsigned int *__mementos_active_bundle_ptr = (unsigned int *)0xffff;
 
 extern unsigned int i, j, k;
 extern unsigned int baseaddr;
+#ifdef MEMENTOS_STUCK_PATH_WATCHPOINT
 extern unsigned int __mementos_last_restore_pc;
+#endif // MEMENTOS_STUCK_PATH_WATCHPOINT
 
 #ifndef MEMENTOS_FRAM
 #error Inappropriate use of mementos_fram.c without MEMENTOS_FRAM defined
@@ -146,6 +148,7 @@ void __mementos_checkpoint (void) {
     }
     k += (i - STARTOFDATA); // skip over checkpointed globals
 
+#ifdef MEMENTOS_STUCK_PATH_WATCHPOINT
     // We completed a checkpoint (*), so clear the last restore info.
     // NOTE: (*) Ideally, this would be atomic with the checkpoint operation. To
     // accomplish that, we'd need to redesign so that the restore bit/info is
@@ -153,6 +156,7 @@ void __mementos_checkpoint (void) {
     // that a stuck path would not get detected -- if power fails between this
     // clearing of the last restore PC and the finalizing of the checkpoint.
     __mementos_last_restore_pc = 0x0;
+#endif // MEMENTOS_STUCK_PATH_WATCHPOINT
 
     // write the magic number
     MEMREF_UINT(k) = MEMENTOS_MAGIC_NUMBER;
