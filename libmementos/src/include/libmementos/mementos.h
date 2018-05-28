@@ -69,6 +69,7 @@ extern volatile unsigned int VOLTAGE_CHECK asm("0x01C0");
 #ifdef MEMENTOS_TIMER
 void Timer_A (void) __attribute__((interrupt(12))); // 0xFFEC for F1611 XXX
 #define TIMER_INTERVAL 20000
+void __mementos_setup_timer (void);
 #endif
 
 #define MEMREF_UINT(x) (*((unsigned int*)(x)))
