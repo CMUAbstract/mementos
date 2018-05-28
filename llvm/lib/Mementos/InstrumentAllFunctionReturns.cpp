@@ -71,7 +71,7 @@ bool MementosInstrumentAllFunctionReturns::runOnBasicBlock (BasicBlock &BB) {
   BasicBlock::iterator i, end;
   for (i = BB.begin(), end = BB.end(); i != end; ++i) {
     if (addTriggerPoint) {
-      CallInst::Create(triggerPointFunction, "", i);
+      CallInst::Create(triggerPointFunction, "", &(*i));
       ++NumFunctionReturnsInstrumented;
       addTriggerPoint = false;
       continue;

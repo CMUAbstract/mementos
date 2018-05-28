@@ -18,3 +18,9 @@ config.log
 *.bc
 *.s
 *.o
+*.d
+*.bc
+*.o
+*.a
+*.a.bc
+*.map

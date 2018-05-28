@@ -38,4 +38,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #define DEBUG_TYPE "mementos"
 
+// Got renamed in LLVM v6+
+#define DEBUG LLVM_DEBUG
+
 #endif

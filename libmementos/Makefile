@@ -1,7 +1,3 @@
-include $(MEMENTOS_ROOT)/Makefile.flags
-
-override SRC_ROOT = ../../src
-
 LIB = libmementos
 
 OBJECTS = \
@@ -11,7 +7,7 @@ ifeq ($(MEMENTOS_IGNORE_GLOBALS),1)
 OBJECTS += mementos_gsize.o
 endif
 
-ifeq ($(MEMENTOS_USER_MAIN),0)
+ifeq ($(MEMENTOS_USER_MAIN),)
 OBJECTS += mementos_main.o
 endif
 
@@ -36,6 +32,10 @@ override CFLAGS += -DMEMENTOS_STUCK_PATH_WATCHPOINT=$(MEMENTOS_STUCK_PATH_WATCHP
 override DEPS += libedb libmsp libmspbuiltins
 endif # MEMENTOS_STUCK_PATH_WATCHPOINT
 
+override SRC_ROOT = ../../src
+
 override CFLAGS += \
 	-I$(SRC_ROOT)/include \
-	-I$(SRC_ROOT)/include/libmementos \
+	-I$(SRC_ROOT)/include/$(LIB) \
+
+include $(MAKER_ROOT)/Makefile.$(TOOLCHAIN)

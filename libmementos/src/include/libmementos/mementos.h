@@ -17,6 +17,8 @@
 #  include <libmementos/fr5969.h>
 #elif defined(__MSP430FR6989__)
 #  include <libmementos/fr6989.h>
+#elif defined(__MSP430FR5994__)
+#  include <libmementos/fr5994.h>
 #else
 #  error Missing or unsupported chip.
 #endif
