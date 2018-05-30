@@ -1,7 +1,6 @@
 # This is the Makefile for using the Mementos toolchain to build an app.
 
-MEMENTOS_ROOT ?= $(LIB_ROOT)/mementos
-$(info MEMENTOS_ROOT $(MEMENTOS_ROOT))
+MEMENTOS_ROOT ?= $(TOOL_ROOT)/mementos
 
 LOCAL_CFLAGS += -DMEMENTOS
 
